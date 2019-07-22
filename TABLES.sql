@@ -53,12 +53,43 @@ CREATE TABLE team (
   championships_won int(3) DEFAULT NULL,
   city_id int(4), 
   stadium_id int(4),
-  most_recent_playoff_season_id int(4),
+  most_recent_playoff_season_id int(4) DEFAULT NULL,
   PRIMARY KEY (`team_id`),
   FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`),
   FOREIGN KEY (`stadium_id`) REFERENCES `Stadium` (`stadium_id`)
-  )ENGINE=InnoDB DEFAULT CHARSET=latin1;  
-
+  )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  
+INSERT INTO team values
+(1, 'Atlanta Hawks', 1, , , 2017) 
+(2, 'Boston Celtics', 17, , , 2019) 
+(3, 'Brooklyn Nets', 0, , , 2019)
+(4, 'Charlotte Bobcats', 0, , , null)
+(5, 'Chicago Bulls', 6 , , , 2017)
+(6, 'Cleveland Cavaliers', 1, , , 2018)
+(7, 'Dallas Mavericks', 1, , , 2016)
+(8, 'Denver Nuggets', 0, , , 2019)
+(9, 'Detroit Pistons', 3, , , 2019)
+(10, 'Golden State Warriors', 6, , , 2019)
+(11, 'Houston Rockets', 2, , , 2019)
+(12, 'Indiana Pacers', 0, , , 2019)
+(13, 'LA Clippers', 0, , , 2019)
+(14, 'LA Lakers', 16, , , 2013)
+(15, 'Memphis Grizzlies', 0, , , 2017)
+(16, 'Miami Heat', 3, , , 2018)
+(17, 'Milwaukee Bucks', 1, , , 2019)
+(18, 'Minnesota Timberwolves', 0, , , 2018)
+(19, 'New Orleans Hornets', 0, , , 2016)
+(20, 'New York Knicks', 2, , , 2013)
+(21, 'Oklahoma City Thunder', 1, , , 2019)
+(22, 'Orlando Magic', 0, , , 2019)
+(23, 'Philadelphia Sixers', 0, , , null)
+(24, 'Phoenix Suns', 0, , ,2010)
+(25, 'Portland Trail Blazers', 1, , , 2019) 
+(26, 'Sacramento Kings', 1, , , 2006)
+(27, 'San Antonio Spurs', 5, , , 2019)
+(28, 'Toronto Raptors', 1, , , 2019)
+(29, 'Utah Jazz', 0, , , 2019)
+(30, 'Washington Wizards', 1, , , 2018);
 
 -- PLAYER  TABLE
 
