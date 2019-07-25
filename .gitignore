@@ -1,3 +1,4 @@
 *.bak
 *.iml
+*.htm
 .idea/*
