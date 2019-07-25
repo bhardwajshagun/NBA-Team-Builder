@@ -181,13 +181,15 @@ CREATE TABLE player (
  FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`)
   )ENGINE=InnoDB DEFAULT CHARSET=latin1;  
   
-  LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\players_11.csv"
+LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\players_11.csv"
 INTO TABLE player
 COLUMNS TERMINATED BY ','
 OPTIONALLY ENCLOSED BY '"'
 ESCAPED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
+
+SHOW VARIABLES LIKE "secure_file_priv";
 
 
 
@@ -472,7 +474,7 @@ CREATE TABLE season_stats (
   FOREIGN KEY (`player_id`) REFERENCES `player` (`player_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
- LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SEASON.csv"
+ LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\SEASON_STATS.csv"
 INTO TABLE SEASON_STATS
 COLUMNS TERMINATED BY ','
 OPTIONALLY ENCLOSED BY '"'
