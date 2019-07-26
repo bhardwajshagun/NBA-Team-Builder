@@ -242,7 +242,7 @@ CREATE TABLE coach (
  FOREIGN KEY (`play_style_id`) REFERENCES `play_style` (`play_style_id`)
   )ENGINE=InnoDB DEFAULT CHARSET=latin1;  
   
-  INSERT into coach values
+INSERT into coach values
 (1,'Lloyd Pierce',43,'C','B+',0,1),
 (2,'Brad Stevens',42,'A','A',0,1),
 (3,'Kenny Atkinson',52,'C+','C+',0,1),
