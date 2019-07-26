@@ -117,9 +117,12 @@ CREATE TABLE play_style (
 INSERT INTO PLAY_STYLE VALUES
 (1, 'PACE AND SPACE'),
 (2, 'BALANCED'),
-(3, 'DEFENCE'),
+(3, 'DEFENSE'),
 (4, 'GRIT AND GRIND'),
-(5, 'SEVEN SECONDS');
+(5, '7 SECONDS'),
+(6, 'PERIMETER CENTRIC'),
+(7, 'POST CENTRIC'),
+(8, 'TRIANGLE');
 
 
 -- TEAM TABLE
@@ -242,36 +245,37 @@ CREATE TABLE coach (
  FOREIGN KEY (`play_style_id`) REFERENCES `play_style` (`play_style_id`)
   )ENGINE=InnoDB DEFAULT CHARSET=latin1;  
   
+SELECT * FROM PLAY_STYLE;
 INSERT into coach values
-(1,'Lloyd Pierce',43,'C','B+',0,1),
-(2,'Brad Stevens',42,'A','A',0,1),
+(1,'Lloyd Pierce',43,'C','B+',0,6),
+(2,'Brad Stevens',42,'A','A',0,2),
 (3,'Kenny Atkinson',52,'C+','C+',0,1),
 (4,'James Borrego',41,'B','C',0,1),
-(5,'Jim Boylen',54,'A','B',0,1),
+(5,'Jim Boylen',54,'A','B',0,3),
 (6,'John Beilein',66,'B+','C',0,1),
-(7,'Rick Carlisle',59,'B','B+',0,1),
-(8,'Michael Malone',47,'B','B',0,1),
-(9,'Dwane Casey',62,'B+','B+',1,1),
-(10,'Steve Kerr',53,'A+','A+',1,1),
-(11,'Mike DAntoni',68,'A+','B',2,1),
-(12,'Nate McMillan',54,'B','C',0,1),
-(13,'Doc Rivers',57,'B','C',1,1),
+(7,'Rick Carlisle',59,'B','B+',0,2),
+(8,'Michael Malone',47,'B','B',0,7),
+(9,'Dwane Casey',62,'B+','B+',1,2),
+(10,'Steve Kerr',53,'A+','A+',1,6),
+(11,'Mike DAntoni',68,'A+','B',2,6),
+(12,'Nate McMillan',54,'B','C',0,3),
+(13,'Doc Rivers',57,'B','C',1,2),
 (14,'Frank Vogel',46,'C','B',0,1),
-(15,'Taylor Jenkins',34,'B','B',0,1),
-(16,'Erik Spoelstra',48,'B+','B+',0,1),
-(17,'Mike Budenholzer',49,'C','A',2,1),
+(15,'Taylor Jenkins',34,'B','B',0,4),
+(16,'Erik Spoelstra',48,'B+','B+',0,2),
+(17,'Mike Budenholzer',49,'C','A',2,6),
 (18,'Ryan Saunders',33,'B+','C+',0,1),
-(19,'Alvin Gentry',64,'C+','D',0,1),
-(20,'David Fizdale',45,'B+','B',0,1),
-(21,'Billy Donovan',54,'C','B+',0,1),
-(22,'Steve Clifford',57,'C','B',0,1),
-(23,'Brett Brown',58,'C','A-',1,1),
+(19,'Alvin Gentry',64,'C+','D',0,7),
+(20,'David Fizdale',45,'B+','B',0,4),
+(21,'Billy Donovan',54,'C','B+',0,2),
+(22,'Steve Clifford',57,'C','B',0,4),
+(23,'Brett Brown',58,'C','A-',1,7),
 (24,'Monty Williams',47,'C','B',0,1),
-(25,'Terry Stotts',61,'B+','C+',0,1),
+(25,'Terry Stotts',61,'B+','C+',0,6),
 (26,'Luke Walton',39,'C','C+',0,1),
-(27,'Gregg Popovich',70,'A+','A+',3,1),
+(27,'Gregg Popovich',70,'A+','A+',3,7),
 (28,'Nick Nurse',51,'B','B+',0,1),
-(29,'Quin Snyder',52,'C','A',0,1),
+(29,'Quin Snyder',52,'C','A',0,3),
 (30,'Scott Brooks',53,'B+','B',1,1);
 
   
@@ -329,8 +333,8 @@ CREATE TABLE INJURY (
     PRIMARY KEY (`injury_id`)
   )ENGINE=InnoDB DEFAULT CHARSET=latin1;  
 
-  INSERT INTO INJURY VALUES
-  (1,'Abdomen',1),
+INSERT INTO INJURY VALUES
+(1,'Abdomen',1),
 (2,'Achilles',2),
 (3,'Ankle',5),
 (4,'Back',3),
