@@ -2,6 +2,7 @@ DROP DATABASE IF EXISTS nba;
 CREATE DATABASE  IF NOT EXISTS nba;
 USE nba;
 
+
 -- POSITION TABLE
 DROP TABLE IF EXISTS position;
 CREATE TABLE position (
@@ -468,7 +469,8 @@ CREATE TABLE season_stats (
   PF FLOAT NOT NULL,
   FP FLOAT NOT NULL,
   DD2 FLOAT NOT NULL,
-  TD3 FLOAT NOT NULL,
+  TD3 int NOT NULL,
+  SALARY int(11) NOT NULL,
   FOREIGN KEY (`season_id`) REFERENCES `season` (`season_id`),
   FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`),
   FOREIGN KEY (`player_id`) REFERENCES `player` (`player_id`)
@@ -482,10 +484,12 @@ ESCAPED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
+select * from season_stats;
+
 -- PlayoffStats TABLE
- DROP TABLE IF EXISTS PlayoffStats;
-CREATE TABLE PlayoffStats (
-   season_id int(11) NOT NULL,
+ DROP TABLE IF EXISTS Playoff_Stats;
+CREATE TABLE Playoff_Stats (
+  season_id int(11) NOT NULL,
   player_id int(11) NOT NULL,
   team_id int(11) NOT NULL,
   games_played int(11) NOT NULL,
@@ -510,14 +514,14 @@ CREATE TABLE PlayoffStats (
   PF FLOAT NOT NULL,
   FP FLOAT NOT NULL,
   DD2 FLOAT NOT NULL,
-  TD3 FLOAT NOT NULL,
+  TD3 int NOT NULL,
   FOREIGN KEY (`season_id`) REFERENCES `season` (`season_id`),
   FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`),
   FOREIGN KEY (`player_id`) REFERENCES `player` (`player_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
  
  LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\PLAYOFFS.csv"
-INTO TABLE PLAYOFFSTATS
+INTO TABLE PLAYOFF_STATS
 COLUMNS TERMINATED BY ','
 OPTIONALLY ENCLOSED BY '"'
 ESCAPED BY '"'
@@ -543,13 +547,13 @@ CREATE TABLE Advance_Stats (
   ts_PER FLOAT NOT NULL,
   usg_PER FLOAT NOT NULL,
   PACE FLOAT NOT NULL,
-  PIE FLOAT NOT NULL,
+  PIE DECIMAL(10,3) NOT NULL,
   FOREIGN KEY (`season_id`) REFERENCES `season` (`season_id`),
   FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`),
   FOREIGN KEY (`player_id`) REFERENCES `player` (`player_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
- LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\ADVANCE STATS.csv"
+ LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\ADVANCE_STATS.csv"
 INTO TABLE ADVANCE_STATS
 COLUMNS TERMINATED BY ','
 OPTIONALLY ENCLOSED BY '"'
