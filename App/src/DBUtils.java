@@ -143,7 +143,7 @@ public class DBUtils {
     return key;
   }
 
-  public int[] getPosition(String position, int size) {
+  public int[] getPosition(String position, int size, int salary) {
     int[] playerArray = new int[size];
     int index = 0;
     int key = -1;
@@ -152,7 +152,8 @@ public class DBUtils {
       Statement stmt = con.createStatement();
       String sqlGet = "select player_id from player " +
                         "join position using (position_id) " +
-                        "where abbrevation = \"" + position + "\"";
+                        "where abbrevation = \"" + position + "\" " +
+                        "and salary < " + salary;
       ResultSet rs = stmt.executeQuery(sqlGet);
       while (rs.next()){
         playerArray[index] = rs.getInt("player_id");
@@ -165,6 +166,41 @@ public class DBUtils {
       e.printStackTrace();
     }
     return playerArray;
+  }
+
+  public int[] championshipPlayers(String position, int salary, int[] currentroster) {
+    int[] playerArray = getPosition(position, numPositions(position), salary);
+    if (position == "PG") {
+      int[] rankedArray = championshipPGs(playerArray, currentroster);
+    }
+    return null;
+  }
+
+  private int[] championshipPGs(int[] PGarray, int[] currentroster) {
+    int key = -1;
+    try {
+      Connection con = getConnection();
+      Statement stmt = con.createStatement();
+      String sqlGet = "select player_id from player " +
+              "join position using (position_id) " +
+              "where abbrevation = \"" + position + "\" " +
+              "and salary < " + salary;
+      ResultSet rs = stmt.executeQuery(sqlGet);
+      while (rs.next()){
+        playerArray[index] = rs.getInt("player_id");
+        index++;
+      }
+      rs.close();
+      stmt.close();
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    }
+
+    for (int i = 0; i < currentroster.length; i++) {
+
+    }
+    return null;
   }
 
 }
