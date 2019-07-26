@@ -29,5 +29,16 @@ public class NBADatabaseMySQL {
     return dbu.getTest("play_style", "play_style_id", "play_style_name", test);
   }
 
+  public int getNumPlayers() {
+    return dbu.getCount("player");
+  }
+
+  public int[] getPositionPlayers(String position, int size) {
+    return dbu.getPosition(position, size);
+  }
+
+  public int getNumPositions(String position){
+    return dbu.numPositions(position);
+  }
 
 }

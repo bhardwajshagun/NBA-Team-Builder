@@ -103,4 +103,68 @@ public class DBUtils {
     return key;
   }
 
+  public int getCount(String table) {
+    int key = -1;
+    try {
+      Connection con = getConnection();
+      Statement stmt = con.createStatement();
+      String sqlGet = "SELECT COUNT(*) as total FROM " + table;
+      ResultSet rs = stmt.executeQuery(sqlGet);
+      rs.next();
+      key = rs.getInt("total");
+      rs.close();
+      stmt.close();
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    }
+    return key;
+  }
+
+  public int numPositions(String pos) {
+    int key = -1;
+    try {
+      Connection con = getConnection();
+      Statement stmt = con.createStatement();
+      String sqlGet = "select count(*) as total from player " +
+                      "join position using (position_id) " +
+                      "where abbrevation = \"" + pos + "\"";
+      System.out.println("test");
+      ResultSet rs = stmt.executeQuery(sqlGet);
+      rs.next();
+      key = rs.getInt("total");
+      System.out.println("test2");
+      rs.close();
+      stmt.close();
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    }
+    return key;
+  }
+
+  public int[] getPosition(String position, int size) {
+    int[] playerArray = new int[size];
+    int index = 0;
+    int key = -1;
+    try {
+      Connection con = getConnection();
+      Statement stmt = con.createStatement();
+      String sqlGet = "select player_id from player " +
+                        "join position using (position_id) " +
+                        "where abbrevation = \"" + position + "\"";
+      ResultSet rs = stmt.executeQuery(sqlGet);
+      while (rs.next()){
+        playerArray[index] = rs.getInt("player_id");
+        index++;
+      }
+      rs.close();
+      stmt.close();
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    }
+    return playerArray;
+  }
+
 }

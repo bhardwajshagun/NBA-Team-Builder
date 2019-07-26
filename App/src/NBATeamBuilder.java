@@ -1,3 +1,4 @@
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +22,8 @@ public class NBATeamBuilder {
 
     api.authenticate(username, password); // DON'T HARDCODE PASSWORDS!
 */
+
+    /*
     api.authenticate("docpat_user", "docpat_p@ssword");
 
     System.out.println("Adding playstyles");
@@ -31,7 +34,19 @@ public class NBATeamBuilder {
     int sid5 = api.getOrInsertPlaystyle("BLAHBLAHBLAH");     // repeat request
     System.out.println("Specialty IDs: "+sid1+" "+sid2+" "+sid3+" "+sid4+" "+sid5);
     api.closeConnection();
+    */
 
+    Scanner scan = new Scanner(System.in);
+    System.out.println("What position are you looking for?");
+    String target_pos = scan.next();
+    api.authenticate("docpat_user", "docpat_p@ssword");
+    int size = api.getNumPositions(target_pos);
+    System.out.println("Number of players: " + size);
+    int[] players = api.getPositionPlayers(target_pos, size);
+    for (int i = 0; i < size; i++) {
+      System.out.println(players[i]);
+    }
+    api.closeConnection();
   }
 
 }
