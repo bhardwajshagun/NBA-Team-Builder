@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 public class NBATeamBuilder {
 
+  //TESTEST
+
   private static NBADatabaseMySQL api = new NBADatabaseMySQL();
 
   public static void main(String args[]) {
