@@ -6,7 +6,7 @@ USE nba;
 -- POSITION TABLE
 DROP TABLE IF EXISTS position;
 CREATE TABLE position (
-  position_id int(4),
+  position_id int(4) not null auto_increment,
   position_name varchar(100)  NOT NULL,
   abbrevation varchar(3) NOT NULL,
   PRIMARY KEY (`position_id`)
@@ -23,7 +23,7 @@ CREATE TABLE position (
 -- CITY TABLE
 DROP TABLE IF EXISTS city;
 CREATE TABLE city (
-  city_id int(4) ,
+  city_id int(4) not null auto_increment,
   city_name varchar(100)  NOT NULL,
   market_size enum('Large', 'Medium', 'Small') NOT NULL,
   climate enum('Warm', 'Cold') NOT NULL,
@@ -65,7 +65,7 @@ INSERT INTO city values
 -- STADIUM TABLE
 DROP TABLE IF EXISTS stadium;
 CREATE TABLE stadium (
-  stadium_id int(4) ,
+  stadium_id int(4) not null auto_increment,
   stadium_name varchar(100)  NOT NULL,
   capacity enum('Large', 'Medium', 'Small') NOT NULL,
   crowd_noise enum('Loud', 'Medium') NOT NULL,
@@ -109,7 +109,7 @@ INSERT INTO stadium values
 -- PLAYSTYLE TABLE
 DROP TABLE IF EXISTS play_style;
 CREATE TABLE play_style (
-  play_style_id int(4) not null ,
+  play_style_id int(4) not null auto_increment,
   play_style_name varchar(100)  NOT NULL,
   PRIMARY KEY (`play_style_id`)
  )ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -128,7 +128,7 @@ INSERT INTO PLAY_STYLE VALUES
 -- TEAM TABLE
 DROP TABLE IF EXISTS team;
 CREATE TABLE team (
-  team_id int(4) ,
+  team_id int(4) not null auto_increment,
   team_name varchar(100)  NOT NULL,
   championships_won int(3) DEFAULT NULL,
   stadium_id int(4),
@@ -173,7 +173,7 @@ INSERT INTO team values
 -- PLAYER  TABLE
 DROP TABLE IF EXISTS player;
 CREATE TABLE player (
-  player_id int(11) NOT NULL,
+  player_id int(11) not null auto_increment,
   player_name varchar(100)  NOT NULL,
   age int(3) NOT NULL,
   height varchar(7)  NOT NULL,
@@ -198,7 +198,7 @@ IGNORE 1 LINES;
 -- SEASON  TABLE
 DROP TABLE IF EXISTS season;
 CREATE TABLE season (
-  season_id int(11) NOT NULL,
+  season_id int(11) NOT NULL auto_increment,
   season INT(20) not null,
   champions_id int(11)  NOT NULL,
   finals_mvp_id int(11) NOT NULL,
@@ -234,7 +234,7 @@ CREATE TABLE season (
 -- COACH  TABLE
 DROP TABLE IF EXISTS coach;
 CREATE TABLE coach (
-  coach_id int(11) NOT NULL,
+  coach_id int(11) NOT NULL auto_increment,
   coach_name varchar(100)  NOT NULL,
   age int(3) NOT NULL,
   offensive_grade varchar(3)  NOT NULL,
@@ -245,7 +245,6 @@ CREATE TABLE coach (
  FOREIGN KEY (`play_style_id`) REFERENCES `play_style` (`play_style_id`)
   )ENGINE=InnoDB DEFAULT CHARSET=latin1;  
   
-SELECT * FROM PLAY_STYLE;
 INSERT into coach values
 (1,'Lloyd Pierce',43,'C','B+',0,6),
 (2,'Brad Stevens',42,'A','A',0,2),
@@ -327,7 +326,7 @@ INSERT INTO COACH_SEASON VALUES
 -- INJURY TABLE
 DROP TABLE IF EXISTS INJURY;
 CREATE TABLE INJURY (
-  injury_id int(11) NOT NULL,
+  injury_id int(11) NOT NULL auto_increment,
   injury_name varchar(100) NOT NULL,
   severity int(1) NOT NULL,
     PRIMARY KEY (`injury_id`)
@@ -396,7 +395,7 @@ INSERT INTO player_injury VALUES
 -- AWARD TABLE
  DROP TABLE IF EXISTS award;
 CREATE TABLE award (
-  award_id int(11) NOT NULL,
+  award_id int(11) NOT NULL auto_increment,
   award_name varchar(50) NOT NULL,
   PRIMARY KEY (`award_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
