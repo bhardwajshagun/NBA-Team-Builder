@@ -20,8 +20,6 @@ CREATE TABLE position (
 (5, 'SMALL FORWARD', 'SF');
 
 
-
-
 -- CITY TABLE
 DROP TABLE IF EXISTS city;
 CREATE TABLE city (
@@ -62,6 +60,7 @@ INSERT INTO city values
 (27, 'San Francisco', 'Large', 'Warm'),
 (28, 'Toronto', 'Medium', 'Cold'),
 (29, 'Washington, D.C.', 'Large', 'Cold');
+
 
 -- STADIUM TABLE
 DROP TABLE IF EXISTS stadium;
@@ -106,6 +105,7 @@ INSERT INTO stadium values
 (28, 'Vivint Smart Home Arena', 'Medium', 'Loud', 25),
 (29, 'Wells Fargo Center', 'Large', 'Medium', 21);
 
+
 -- PLAYSTYLE TABLE
 DROP TABLE IF EXISTS play_style;
 CREATE TABLE play_style (
@@ -121,7 +121,8 @@ INSERT INTO PLAY_STYLE VALUES
 (4, 'GRIT AND GRIND'),
 (5, 'SEVEN SECONDS');
 
-    -- TEAM TABLE
+
+-- TEAM TABLE
 DROP TABLE IF EXISTS team;
 CREATE TABLE team (
   team_id int(4) ,
@@ -165,8 +166,8 @@ INSERT INTO team values
 (29, 'Utah Jazz', 0, 25, 2019),
 (30, 'Washington Wizards', 1, 29, 2018);
 
--- PLAYER  TABLE
 
+-- PLAYER  TABLE
 DROP TABLE IF EXISTS player;
 CREATE TABLE player (
   player_id int(11) NOT NULL,
@@ -182,7 +183,7 @@ CREATE TABLE player (
  FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`)
   )ENGINE=InnoDB DEFAULT CHARSET=latin1;  
   
-LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\players_11.csv"
+LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\PLAYERS.csv"
 INTO TABLE player
 COLUMNS TERMINATED BY ','
 OPTIONALLY ENCLOSED BY '"'
@@ -190,12 +191,8 @@ ESCAPED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-SHOW VARIABLES LIKE "secure_file_priv";
 
-
-
-  -- SEASON  TABLE
-
+-- SEASON  TABLE
 DROP TABLE IF EXISTS season;
 CREATE TABLE season (
   season_id int(11) NOT NULL,
@@ -208,7 +205,6 @@ CREATE TABLE season (
  FOREIGN KEY (`finals_mvp_id`) REFERENCES `player` (`player_id`),
  FOREIGN KEY (`mvp_id`) REFERENCES `player` (`player_id`)
  )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-  
   
  INSERT INTO SEASON VALUES
  (1,2001,14,535,538),
@@ -231,9 +227,8 @@ CREATE TABLE season (
 (18,2018,10,305,222),
 (19,2019,28,296,180);
 
-SELECT* FROM SEASON;
--- COACH  TABLE
 
+-- COACH  TABLE
 DROP TABLE IF EXISTS coach;
 CREATE TABLE coach (
   coach_id int(11) NOT NULL,
@@ -280,8 +275,7 @@ CREATE TABLE coach (
 (30,'Scott Brooks',53,'B+','B',1,1);
 
   
-   -- COACH-SEASON  TABLE
-
+-- COACH-SEASON  TABLE
 DROP TABLE IF EXISTS COACH_SEASON;
 CREATE TABLE COACH_SEASON (
   coach_id int(11) NOT NULL,
@@ -291,7 +285,6 @@ CREATE TABLE COACH_SEASON (
   FOREIGN KEY (`season_id`) REFERENCES `season` (`season_id`),
   FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`)
  )ENGINE=InnoDB DEFAULT CHARSET=latin1;  
-
 
 INSERT INTO COACH_SEASON VALUES
 (1,1,19),
@@ -327,8 +320,7 @@ INSERT INTO COACH_SEASON VALUES
 
   
   
-    -- INJURY TABLE
-
+-- INJURY TABLE
 DROP TABLE IF EXISTS INJURY;
 CREATE TABLE INJURY (
   injury_id int(11) NOT NULL,
@@ -336,9 +328,7 @@ CREATE TABLE INJURY (
   severity int(1) NOT NULL,
     PRIMARY KEY (`injury_id`)
   )ENGINE=InnoDB DEFAULT CHARSET=latin1;  
-  
-  
-  
+
   INSERT INTO INJURY VALUES
   (1,'Abdomen',1),
 (2,'Achilles',2),
@@ -364,9 +354,9 @@ CREATE TABLE INJURY (
 (22,'Toe',3),
 (23,'Wrist',1);
 
-  
-  -- PLAYER INJURY TABLE
-  DROP TABLE IF EXISTS player_injury;
+
+-- PLAYER INJURY TABLE
+DROP TABLE IF EXISTS player_injury;
 CREATE TABLE player_injury (
   player_id int(11) NOT NULL,
   injury_id int(11) NOT NULL,
@@ -397,7 +387,6 @@ INSERT INTO player_injury VALUES
 (475,17,19,1,0),
 (507,14,19,0,0),
 (514,23,19,1,0);
-
 
 
 -- AWARD TABLE
@@ -440,7 +429,6 @@ INSERT INTO PLAYER_AWARD VALUES
 (351,8,19);
 
 
-SELECT* FROM SEASON;
 -- SEASON_STATS TABLE
  DROP TABLE IF EXISTS season_stats;
 CREATE TABLE season_stats (
@@ -484,7 +472,6 @@ ESCAPED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
-select * from season_stats;
 
 -- PlayoffStats TABLE
  DROP TABLE IF EXISTS Playoff_Stats;
@@ -520,14 +507,13 @@ CREATE TABLE Playoff_Stats (
   FOREIGN KEY (`player_id`) REFERENCES `player` (`player_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
  
- LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\PLAYOFFS.csv"
+ LOAD DATA INFILE "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\PLAYOFF_STATS.csv"
 INTO TABLE PLAYOFF_STATS
 COLUMNS TERMINATED BY ','
 OPTIONALLY ENCLOSED BY '"'
 ESCAPED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
-
 
 
 -- ADVANCE_STATS TABLE
@@ -560,5 +546,6 @@ OPTIONALLY ENCLOSED BY '"'
 ESCAPED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
+
 
 SHOW TABLES;
