@@ -7,7 +7,6 @@ import java.util.Scanner;
 
 public class NBATeamBuilder {
 
-  //TESTEST
 
   private static NBADatabaseMySQL api = new NBADatabaseMySQL();
 
@@ -19,13 +18,11 @@ public class NBATeamBuilder {
     String username = scan.next();
     System.out.println("Enter server password: ");
     String password = scan.next();
-
     api.authenticate(username, password); // DON'T HARDCODE PASSWORDS!
-*/
+    */
 
     /*
     api.authenticate("docpat_user", "docpat_p@ssword");
-
     System.out.println("Adding playstyles");
     int sid1 = api.getOrInsertPlaystyle("DEFENSE");
     int sid2 = api.getOrInsertPlaystyle("PACE AND SPACE");
@@ -39,7 +36,6 @@ public class NBATeamBuilder {
     /*
     IDEA: make Player class/object that stores player_id and other info that's frequently accessed
       ex. position_id, salary
-
     User enters a position
     If there is already a player who plays that position on the team, they are looking for a:
       BENCH player
@@ -76,8 +72,6 @@ public class NBATeamBuilder {
             SG/SF
             PF/C: OREB%, DREB%, REB%
               idea: differenciate b/w PF/C w/ weighting diff rebounding percetage
-
-
     Coach: recommend at very end
      */
 
@@ -97,7 +91,9 @@ public class NBATeamBuilder {
       System.out.println(players[i]);
     }
     */
+
     api.closeConnection();
+
   }
 
 }

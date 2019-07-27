@@ -26,7 +26,6 @@ public class DBUtils {
         System.exit(1);
       }
     }
-
     return con;
   }
 
@@ -39,36 +38,6 @@ public class DBUtils {
     }
   }
 
-
-  public int insertOneRecord(String insertSQL)
-  {
-    // System.out.println("INSERT STATEMENT: "+insertSQL);
-    int key = -1;
-    try {
-
-      // get connection and initialize statement
-      Connection con = getConnection();
-      Statement stmt = con.createStatement();
-
-      stmt.executeUpdate(insertSQL, Statement.RETURN_GENERATED_KEYS);
-
-      // extract auto-incremented ID
-      ResultSet rs = stmt.getGeneratedKeys();
-      if (rs.next()) key = rs.getInt(1);
-
-      // Cleanup
-      rs.close();
-      stmt.close();
-
-    } catch (SQLException e) {
-      System.err.println("ERROR: Could not insert record: "+insertSQL);
-      System.err.println(e.getMessage());
-      e.printStackTrace();
-    }
-    return key;
-  }
-
-
   /**
    * For a table of terms consisting of an id and string value pair, get the id of the term
    * adding a new term if it does not yet exist in the table
@@ -78,9 +47,7 @@ public class DBUtils {
    */
   public int getTest(String table, String keyColumn, String valueColumn, String term)
   {
-
     int key = -1;
-
     try {
       Connection con = getConnection();
       Statement stmt = con.createStatement();

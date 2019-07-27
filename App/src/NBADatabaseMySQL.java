@@ -10,9 +10,7 @@ public class NBADatabaseMySQL {
 
   public void authenticate(String user, String password) {
     dbu = new DBUtils("jdbc:mysql://localhost:3306/nba?serverTimezone=EST5EDT", user, password);
-
   }
-
 
   /**
    * Close the connection when application finishes
