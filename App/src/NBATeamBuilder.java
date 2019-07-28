@@ -75,24 +75,25 @@ public class NBATeamBuilder {
     Coach: recommend at very end
      */
 
-
+    int[] currentroster = {2, 3, 8};
     Scanner scan = new Scanner(System.in);
     System.out.println("What is the goal for your team?");
     String goal = scan.next();
     System.out.println("What position are you looking for?");
-    String target_pos = scan.next();
+    String position = scan.next();
     api.authenticate("docpat_user", "docpat_p@ssword");
+    int size = api.getNumPositions(position);
+    System.out.println("Number of players: " + size);
+    int salary = 50000000;
+    int[] championshipPGS = api.getChampionshipPGS(currentroster, salary);
 
     /*
-    int size = api.getNumPositions(target_pos);
-    System.out.println("Number of players: " + size);
-    int[] players = api.getPositionPlayers(target_pos, size);
+    int[] players = api.getPositionPlayers(position, size, salary);
     for (int i = 0; i < size; i++) {
       System.out.println(players[i]);
     }
-    */
-
     api.closeConnection();
+    */
 
   }
 

@@ -1,4 +1,9 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.sound.midi.SysexMessage;
 
 public class DBUtils {
 
@@ -88,19 +93,17 @@ public class DBUtils {
     return key;
   }
 
-  public int numPositions(String pos) {
+  public int numPositions(String position) {
     int key = -1;
     try {
       Connection con = getConnection();
       Statement stmt = con.createStatement();
       String sqlGet = "select count(*) as total from player " +
                       "join position using (position_id) " +
-                      "where abbrevation = \"" + pos + "\"";
-      System.out.println("test");
+                      "where abbrevation = \"" + position + "\"";
       ResultSet rs = stmt.executeQuery(sqlGet);
       rs.next();
       key = rs.getInt("total");
-      System.out.println("test2");
       rs.close();
       stmt.close();
     } catch (SQLException e) {
@@ -119,6 +122,7 @@ public class DBUtils {
       Statement stmt = con.createStatement();
       String sqlGet = "select player_id from player " +
                         "join position using (position_id) " +
+                        "join season_stats using (player_id) " +
                         "where abbrevation = \"" + position + "\" " +
                         "and salary < " + salary;
       ResultSet rs = stmt.executeQuery(sqlGet);
@@ -135,28 +139,67 @@ public class DBUtils {
     return playerArray;
   }
 
-  public int[] championshipPlayers(String position, int salary, int[] currentroster) {
+  public int[] championshipPlayers(String position, int[] currentroster, int salary) {
     int[] playerArray = getPosition(position, numPositions(position), salary);
     if (position == "PG") {
-      int[] rankedArray = championshipPGs(playerArray, currentroster);
+      int[] rankedArray = championshipPGs(playerArray, currentroster, salary);
     }
     return null;
   }
 
-  private int[] championshipPGs(int[] PGarray, int[] currentroster) {
+  private int[] championshipPGs(int[] PGarray, int[] currentroster, int salary) {
+    List avaiablePGs = new ArrayList<Integer>();
+    for(int value: PGarray) {
+      avaiablePGs.add(value);
+    }
+
+    System.out.println("currentroster size: " + currentroster.length);
+    List rosterList = new ArrayList<Integer>();
+    for(int value: currentroster) {
+      rosterList.add(value);
+    }
+    System.out.println("rosterList size: " + rosterList.size());
+    for (int i = 0; i < rosterList.size(); i++) {
+      System.out.println(rosterList.get(i));
+    }
+
+
+    avaiablePGs.removeAll(rosterList);
+    for(int i = 0; i < rosterList.size(); i++) {
+      avaiablePGs.remove(avaiablePGs.size() - 1);
+    }
+
+    System.out.println("avaiablePGS size: " + avaiablePGs.size());
+    for (int i = 0; i < avaiablePGs.size(); i++) {
+      System.out.println(avaiablePGs.get(i));
+    }
+    /*
     int key = -1;
     try {
       Connection con = getConnection();
       Statement stmt = con.createStatement();
-      String sqlGet = "select player_id from player " +
-              "join position using (position_id) " +
-              "where abbrevation = \"" + position + "\" " +
-              "and salary < " + salary;
-      ResultSet rs = stmt.executeQuery(sqlGet);
+      // Build the SQL
+      StringBuilder sqlGet = new StringBuilder("SELECT player_id FROM season_stats " +
+                                            "WHERE position_id = 1 and salary < " + salary +
+                                            " AND player_id NOT IN (");
+      System.out.println("test1");
+      for (int i = 0; i < currentroster.length; i++) {
+        sqlGet.append(currentroster[i]);
+        sqlGet.append(",");
+      }
+      // Delete the last comma
+      sqlGet.delete(sqlGet.length()-1, sqlGet.length());
+      sqlGet.append(")");
+      System.out.println(sqlGet.toString());
+
+      ResultSet rs = stmt.executeQuery(sqlGet.toString());
+      int[] championPGsArray = new int[PGarray.length];
+      int index = 0;
       while (rs.next()){
-        playerArray[index] = rs.getInt("player_id");
+        championPGsArray[index] = rs.getInt("player_id");
         index++;
       }
+      System.out.println("size: " + index);
       rs.close();
       stmt.close();
     } catch (SQLException e) {
@@ -167,6 +210,7 @@ public class DBUtils {
     for (int i = 0; i < currentroster.length; i++) {
 
     }
+    */
     return null;
   }
 

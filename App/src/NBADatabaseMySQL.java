@@ -31,8 +31,12 @@ public class NBADatabaseMySQL {
     return dbu.getCount("player");
   }
 
-  public int[] getPositionPlayers(String position, int size) {
-    return dbu.getPosition(position, size);
+  public int[] getPositionPlayers(String position, int size, int salary) {
+    return dbu.getPosition(position, size, salary);
+  }
+
+  public int[] getChampionshipPGS(int[] currentroster, int salary) {
+    return dbu.championshipPlayers("PG", currentroster, salary);
   }
 
   public int getNumPositions(String position){
