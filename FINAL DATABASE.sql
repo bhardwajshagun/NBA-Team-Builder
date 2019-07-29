@@ -375,7 +375,7 @@ CREATE TABLE player_injury (
   player_id int(11) NOT NULL,
   injury_id int(11) NOT NULL,
   season_id int(11) NOT NULL,
-  surgery_requried tinyint NOT NULL,
+  surgery_required tinyint NOT NULL,
   games_missed int(3) NOT NULL,
   FOREIGN KEY (`season_id`) REFERENCES `season` (`season_id`),
   FOREIGN KEY (`injury_id`) REFERENCES `injury` (`injury_id`),
