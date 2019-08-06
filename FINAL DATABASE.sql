@@ -364,7 +364,7 @@ CREATE TABLE player_injury (
   player_id int(11) NOT NULL,
   injury_id int(11) NOT NULL,
   season_id int(11) NOT NULL,
-  surgery_requried tinyint NOT NULL,
+  surgery_required tinyint NOT NULL,
   games_missed int(3) NOT NULL,
   FOREIGN KEY (`season_id`) REFERENCES `season` (`season_id`),
   FOREIGN KEY (`injury_id`) REFERENCES `injury` (`injury_id`),
@@ -399,6 +399,7 @@ CREATE TABLE award (
   award_name varchar(50) NOT NULL,
   PRIMARY KEY (`award_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 INSERT INTO AWARD VALUES
 (1,'NBA MOST VALUABLE PLAYER'),			
 (2,'NBA ROOKIE OF THE YEAR'),			
@@ -488,9 +489,9 @@ CREATE TABLE Playoff_Stats (
   FGM FLOAT NOT NULL,
   FGA FLOAT NOT NULL,
   FG_PER FLOAT NOT NULL,
-  3PM FLOAT NOT NULL,
-  3PA FLOAT NOT NULL,
-  3P_PER FLOAT NOT NULL,
+  THREE_PM FLOAT NOT NULL,
+  THREE_PA FLOAT NOT NULL,
+  THREE_P_PER FLOAT NOT NULL,
   FTM FLOAT NOT NULL,
   FTA FLOAT NOT NULL,
   FT_PER FLOAT NOT NULL,
