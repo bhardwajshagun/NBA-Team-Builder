@@ -2,17 +2,6 @@ DROP DATABASE IF EXISTS nba;
 CREATE DATABASE  IF NOT EXISTS nba;
 USE nba;
 
-select player_id from player
-join position using (position_id)
-join season_stats using (player_id)
-where abbrevation = "PG" and salary < 50000000;
-
-select *
-from season_stats
-join player using(player_id)
-where position_id = 1 and salary < 50000000
-and player_id not in (2,3,8);
-
 
 -- POSITION TABLE
 DROP TABLE IF EXISTS position;

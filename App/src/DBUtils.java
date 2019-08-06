@@ -148,6 +148,7 @@ public class DBUtils {
   }
 
   private int[] championshipPGs(int[] PGarray, int[] currentroster, int salary) {
+    //look at storing current roster in class, instead of just player id
     List avaiablePGs = new ArrayList<Integer>();
     for(int value: PGarray) {
       avaiablePGs.add(value);
