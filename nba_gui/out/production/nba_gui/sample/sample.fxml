@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="568.0" prefWidth="856.0" style="-fx-background-color: #8C8984;"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="sample.HomeController">
+    <top>
+        <TitledPane animated="false" collapsible="false" prefHeight="81.0" prefWidth="856.0"
+                    text="NBA Team Builder" BorderPane.alignment="CENTER">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"
+                            style="-fx-background-color: #E8AE3B;">
+                    <children>
+                        <Button layoutX="14.0" layoutY="8.0" mnemonicParsing="false"
+                                onAction="#handleInputCurrentRoster" prefHeight="27.0"
+                                prefWidth="161.0" text="Enter Current Roster"/>
+                        <Label layoutX="592.0" layoutY="9.0" prefHeight="28.0" prefWidth="141.0"
+                               text="Salary Cap:">
+                            <font>
+                                <Font size="18.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                </AnchorPane>
+            </content>
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </TitledPane>
+    </top>
+    <left>
+        <SplitPane dividerPositions="0.7628865979381443" opacity="0.78" orientation="VERTICAL"
+                   prefHeight="487.0" prefWidth="224.0" BorderPane.alignment="CENTER">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <GridPane fx:id="starters" layoutY="77.0" prefHeight="292.0"
+                                  prefWidth="222.0" style="-fx-background-color: #383227;"
+                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
+                                                   prefWidth="100.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                vgrow="SOMETIMES"/>
+                            </rowConstraints>
+                            <children>
+                                <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                    <children>
+                                        <TextField fx:id="player2" layoutX="3.0" layoutY="1.0"
+                                                   prefHeight="27.0" prefWidth="98.0"
+                                                   text="Player 2"/>
+                                        <ImageView fx:id="player2pic" fitHeight="95.0"
+                                                   fitWidth="96.0" layoutX="4.0" layoutY="34.0"
+                                                   pickOnBounds="true" preserveRatio="true"/>
+                                    </children>
+                                </Pane>
+                                <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+                                    <children>
+                                        <TextField fx:id="player3" layoutX="3.0" layoutY="1.0"
+                                                   prefHeight="27.0" prefWidth="96.0"
+                                                   text="Player 3"/>
+                                        <ImageView fx:id="player3pic" fitHeight="95.0"
+                                                   fitWidth="96.0" layoutX="3.0" layoutY="28.0"
+                                                   pickOnBounds="true" preserveRatio="true"/>
+                                    </children>
+                                </Pane>
+                                <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                                    <children>
+                                        <TextField fx:id="player4" layoutX="3.0" layoutY="1.0"
+                                                   prefHeight="27.0" prefWidth="99.0"
+                                                   text="Player 4"/>
+                                        <ImageView fx:id="player4pic" fitHeight="95.0"
+                                                   fitWidth="96.0" layoutX="5.0" layoutY="28.0"
+                                                   pickOnBounds="true" preserveRatio="true"/>
+                                    </children>
+                                </Pane>
+                                <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1"
+                                      GridPane.rowIndex="1">
+                                    <children>
+                                        <TextField fx:id="player5" layoutX="6.0" layoutY="1.0"
+                                                   prefHeight="27.0" prefWidth="94.0"
+                                                   text="Player 5"/>
+                                        <ImageView fx:id="player5pic" fitHeight="95.0"
+                                                   fitWidth="96.0" layoutX="2.0" layoutY="28.0"
+                                                   pickOnBounds="true" preserveRatio="true"/>
+                                    </children>
+                                </Pane>
+                                <Pane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <TextField fx:id="player1" layoutX="3.0" layoutY="1.0"
+                                                   prefHeight="15.0" prefWidth="97.0"
+                                                   text="Player 1"/>
+                                        <ImageView fx:id="player1pic" fitHeight="95.0"
+                                                   fitWidth="96.0" layoutX="8.0" layoutY="28.0"
+                                                   pickOnBounds="true" preserveRatio="true"/>
+                                    </children>
+                                </Pane>
+                            </children>
+                        </GridPane>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="120.0" prefWidth="222.0"
+                            style="-fx-background-color: #383227;"/>
+            </items>
+            <effect>
+                <Bloom threshold="1.0"/>
+            </effect>
+        </SplitPane>
+    </left>
+    <center>
+        <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label layoutX="40.0" layoutY="16.0" prefHeight="30.0" prefWidth="201.0"
+                       text="Goal for Upcoming Season:" textFill="#110a0a">
+                    <font>
+                        <Font name="System Font" size="15.0"/>
+                    </font>
+                </Label>
+                <ChoiceBox fx:id="potentialGoals" layoutX="40.0" layoutY="46.0" prefHeight="30.0"
+                           prefWidth="184.0"/>
+                <Button fx:id="recommendPlayers" layoutX="40.0" layoutY="107.0"
+                        mnemonicParsing="false" prefHeight="39.0" prefWidth="231.0"
+                        text="FIND PLAYERS">
+                    <font>
+                        <Font size="24.0"/>
+                    </font>
+                </Button>
+                <VBox layoutX="349.0" layoutY="56.0" prefHeight="417.0" prefWidth="247.0"
+                      style="-fx-background-color: #383227;"/>
+                <Label layoutX="371.0" layoutY="20.0" prefHeight="26.0" prefWidth="196.0"
+                       text="Recommended Players">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+    </center>
+</BorderPane>
