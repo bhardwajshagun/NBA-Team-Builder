@@ -39,6 +39,28 @@ public class DBUtils {
     }
   }
 
+  public String[] getAllPlayers() {
+    int size = getCount("player");
+    int index = 0;
+    String[] players = new String[size];
+    try {
+      Connection con = getConnection();
+      Statement stmt = con.createStatement();
+      String sqlGet = "SELECT player_name FROM player";
+      ResultSet rs = stmt.executeQuery(sqlGet);
+      while (rs.next()){
+        players[index] = rs.getString("player_name");
+        index++;
+      }
+      rs.close();
+      stmt.close();
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    }
+    return players;
+  }
+
   public PlayoffStats[] addPlayer(SeasonStats[] currentRoster, int num, int playerID) {
     try {
       Connection con = getConnection();
@@ -269,7 +291,7 @@ public class DBUtils {
   }
 
   public SeasonStats[] futureSFs(int salary) {
-    SeasonStats[] sfs = getPosition("SG", numPositions("SG", salary), salary);
+    SeasonStats[] sfs = getPosition("SF", numPositions("SF", salary), salary);
     for(int i = 0; i < sfs.length; i++) {
       float value = 0;
       value += -(sfs[i].getSalary() / 2000000.0);
@@ -286,7 +308,7 @@ public class DBUtils {
   }
 
   public SeasonStats[] futurePFs(int salary) {
-    SeasonStats[] pfs = getPosition("SG", numPositions("SG", salary), salary);
+    SeasonStats[] pfs = getPosition("PF", numPositions("PF", salary), salary);
     for(int i = 0; i < pfs.length; i++) {
       float value = 0;
       value += -(pfs[i].getSalary() / 2000000.0);
@@ -301,7 +323,7 @@ public class DBUtils {
   }
 
   public SeasonStats[] futureCs(int salary) {
-    SeasonStats[] cs = getPosition("SG", numPositions("SG", salary), salary);
+    SeasonStats[] cs = getPosition("C", numPositions("C", salary), salary);
     for(int i = 0; i < cs.length; i++) {
       float value = 0;
       value += -(cs[i].getSalary() / 2000000.0);
@@ -372,7 +394,7 @@ public class DBUtils {
   }
 
   public SeasonStats[] championshipSGs(int salary) {
-    SeasonStats[] sgs = getPosition("PG", numPositions("PG", salary), salary);
+    SeasonStats[] sgs = getPosition("SG", numPositions("SG", salary), salary);
     for(int i = 0; i < sgs.length; i++) {
       float value = 0;
       value += -(sgs[i].getSalary() / 1000000.0);
@@ -384,7 +406,7 @@ public class DBUtils {
   }
 
   public SeasonStats[] championshipSFs(int salary) {
-    SeasonStats[] sfs = getPosition("PG", numPositions("PG", salary), salary);
+    SeasonStats[] sfs = getPosition("SF", numPositions("SF", salary), salary);
     for(int i = 0; i < sfs.length; i++) {
       float value = 0;
       value += -(sfs[i].getSalary() / 1000000.0);
@@ -396,7 +418,7 @@ public class DBUtils {
   }
 
   public SeasonStats[] championshipPFs(int salary) {
-    SeasonStats[] pfs = getPosition("PG", numPositions("PG", salary), salary);
+    SeasonStats[] pfs = getPosition("PF", numPositions("PF", salary), salary);
     for(int i = 0; i < pfs.length; i++) {
       float value = 0;
       value += -(pfs[i].getSalary() / 1000000.0);
@@ -408,7 +430,7 @@ public class DBUtils {
   }
 
   public SeasonStats[] championshipCs(int salary) {
-    SeasonStats[] cs = getPosition("PG", numPositions("PG", salary), salary);
+    SeasonStats[] cs = getPosition("C", numPositions("C", salary), salary);
     for(int i = 0; i < cs.length; i++) {
       float value = 0;
       value += -(cs[i].getSalary() / 1000000.0);

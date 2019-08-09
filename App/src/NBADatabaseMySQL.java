@@ -55,7 +55,11 @@ public class NBADatabaseMySQL {
   }
 
   public SeasonStats[] getFuturePlayers(String position, int salary) {
-    return  dbu.futurePlayers(position, salary);
+    return dbu.futurePlayers(position, salary);
+  }
+
+  public String[] getAllPlayers(){
+    return dbu.getAllPlayers();
   }
 
 }
