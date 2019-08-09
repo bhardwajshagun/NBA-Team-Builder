@@ -111,18 +111,8 @@ public class homeMenuController implements Initializable {
 
     roster = currentRoster;
 
-    // first need to do some sanity checks, to see if the user has even entered any players
-    if (currentRoster.isEmpty()) {
-      System.out.println("No players currently on the roster.\n");
-    }
-
-    for (int i = 0; i < currentRoster.size(); i++) {
-      System.out.println(currentRoster.get(i));
-    }
-
     // now set the player names on the left hand side, displaying user's current team members
     // may need to implement a try/catch here depending on what it does for empty array elements...
-    System.out.println("Adding first starter...." + currentRoster.get(0) + "\n");
     starter1.setText(currentRoster.get(0));
     try {
       Image image1 = new Image("pictures/photos/" + currentRoster.get(0) + ".png");
@@ -130,7 +120,6 @@ public class homeMenuController implements Initializable {
     } catch (Exception e) {
     }
 
-    System.out.println("Adding second starter...." + currentRoster.get(1) + "\n");
     starter2.setText(currentRoster.get(1));
     try {
       Image image2 = new Image("pictures/photos/" + currentRoster.get(1) + ".png");
@@ -138,7 +127,6 @@ public class homeMenuController implements Initializable {
     } catch (Exception e) {
     }
 
-    System.out.println("Adding third starter...." + currentRoster.get(2) + "\n");
     starter3.setText(currentRoster.get(2));
     try {
       Image image3 = new Image("pictures/photos/" + currentRoster.get(2) + ".png");
@@ -146,7 +134,6 @@ public class homeMenuController implements Initializable {
     } catch (Exception e) {
     }
 
-    System.out.println("Adding fourth starter...." + currentRoster.get(3) + "\n");
     starter4.setText(currentRoster.get(3));
     try {
       Image image4 = new Image("pictures/photos/" + currentRoster.get(3) + ".png");
@@ -154,7 +141,6 @@ public class homeMenuController implements Initializable {
     } catch (Exception e) {
     }
 
-    System.out.println("Adding fifth starter...." + currentRoster.get(4) + "\n");
     starter5.setText(currentRoster.get(4));
     try {
       Image image5 = new Image("pictures/photos/" + currentRoster.get(4) + ".png");
@@ -162,7 +148,6 @@ public class homeMenuController implements Initializable {
     } catch (Exception e) {
     }
 
-    System.out.println("Now setting labels for bench players too");
     // and add any bench players (if they exist!)
     bench1.setText(currentRoster.get(5));
     bench1.setText(currentRoster.get(6));
@@ -173,20 +158,18 @@ public class homeMenuController implements Initializable {
 
   @FXML
   void runRecommendationAlgorithm(ActionEvent event) {
-    System.out.println("targetposition: " + targetPositions.getValue());
-    System.out.println("potentialGoals: " + potentialGoals.getValue());
-    String[] players = new String[3];
+    String[] players;
     if (potentialGoals.getValue().equals("Championship")) {
       if (targetPositions.getValue().equals("PG")) {
-
+        players = nba.getChampionshipPGs(maxContracts.getValue());
       } else if (targetPositions.getValue().equals("SG")) {
-
+        players = nba.getChampionshipSGs(maxContracts.getValue());
       } else if (targetPositions.getValue().equals("SF")) {
-
+        players = nba.getChampionshipSFs(maxContracts.getValue());
       } else if (targetPositions.getValue().equals("PF")) {
-
+        players = nba.getChampionshipPFs(maxContracts.getValue());
       } else {
-
+        players = nba.getChampionshipCs(maxContracts.getValue());
       }
     } else if (potentialGoals.getValue().equals("Tank")) {
       if (targetPositions.getValue().equals("PG")) {
@@ -214,8 +197,18 @@ public class homeMenuController implements Initializable {
         players = nba.getFutureCs(maxContracts.getValue());
       }
     }
-    recommendation1.setText(players[0]);
-    recommendation2.setText(players[1]);
-    recommendation3.setText(players[2]);
+    String[] recommendedPlayers = new String[3];
+    int counter = 0;
+    int i = 0;
+    while (counter < 3) {
+      if (!roster.contains(players[i])) {
+        recommendedPlayers[counter] = players[i];
+        counter++;
+      }
+      i++;
+    }
+    recommendation1.setText(recommendedPlayers[0]);
+    recommendation2.setText(recommendedPlayers[1]);
+    recommendation3.setText(recommendedPlayers[2]);
   }
 }

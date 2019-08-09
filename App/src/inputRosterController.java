@@ -116,11 +116,8 @@ public class inputRosterController implements Initializable {
       // to the new controller so it can use that data
       homeMenuController controller = loader.getController();
       controller.initData(finalRoster);
-
     } catch (Exception e) {
-      System.out.println("");
     }
   }
-
 
 }

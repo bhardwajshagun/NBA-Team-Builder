@@ -102,7 +102,6 @@ public class DBUtils {
                 rs.getInt("TD3"),
                 rs.getInt("SALARY"));
       } else {
-        //throw new IllegalArgumentException("Player does not exist")
       }
       rs.close();
       stmt.close();
@@ -111,38 +110,6 @@ public class DBUtils {
       e.printStackTrace();
     }
     return currentRoster;
-  }
-
-  /**
-   * For a table of terms consisting of an id and string value pair, get the id of the term
-   * adding a new term if it does not yet exist in the table
-   * @param table The table of terms
-   * @param term The term value
-   * @return The id of the term
-   */
-  public int getTest(String table, String keyColumn, String valueColumn, String term)
-  {
-    int key = -1;
-    try {
-      Connection con = getConnection();
-      Statement stmt = con.createStatement();
-      String sqlGet = "SELECT "+keyColumn+" FROM "+table+" WHERE "+valueColumn+" = '"+term.toUpperCase()+"'";
-      ResultSet rs = stmt.executeQuery(sqlGet);
-      if (rs.next())
-        key = rs.getInt(1);
-      else {
-        String sqlInsert = "INSERT INTO "+table+" ("+valueColumn+") VALUES ('"+term.toUpperCase()+"')";
-        stmt.executeUpdate(sqlInsert, Statement.RETURN_GENERATED_KEYS);
-        rs = stmt.getGeneratedKeys();
-        if (rs.next()) key = rs.getInt(1);
-      }
-      rs.close();
-      stmt.close();
-    } catch (SQLException e) {
-      System.err.println(e.getMessage());
-      e.printStackTrace();
-    }
-    return key;
   }
 
   public int getCount(String table) {
@@ -254,6 +221,11 @@ public class DBUtils {
     else {
       players = futureCs(salary);
     }
+    for (int i = 0; i < players.length; i++) {
+      if (players[i].getGames() < 40 || players[i].getMinutes() < 15) {
+        players[i].value -= 1000000;
+      }
+    }
     Arrays.sort(players, new PlayerComparator());
     return players;
   }
@@ -363,8 +335,102 @@ public class DBUtils {
     return players;
   }
 
-  public SeasonStats[] championshipPlayers(String position, int salary) {
-    SeasonStats[] players;
+  public int numChampionshipPositions(String position, int salary) {
+    int key = -1;
+    try {
+      Connection con = getConnection();
+      Statement stmt = con.createStatement();
+      String sqlGet = "select count(*) as total from player " +
+              "join position using (position_id) " +
+              "join season_stats using (player_id) " +
+              "join playoff_stats using (player_id) " +
+              "join advance_stats using (player_id) " +
+              "where abbrevation = \"" + position + "\" " +
+              "and salary < " + salary;
+      ResultSet rs = stmt.executeQuery(sqlGet);
+      rs.next();
+      key = rs.getInt("total");
+      rs.close();
+      stmt.close();
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    }
+    return key;
+  }
+
+  public ChampionshipStats[] getChampionshipPosition(String position, int size, int salary) {
+    ChampionshipStats[] playerArray = new ChampionshipStats[size];
+    int index = 0;
+    try {
+      Connection con = getConnection();
+      Statement stmt = con.createStatement();
+      String sqlGet = "select * from player " +
+              "join position using (position_id) " +
+              "join season_stats using (player_id) " +
+              "join playoff_stats using (player_id) " +
+              "join advance_stats using (player_id) " +
+              "where abbrevation = \"" + position + "\" " +
+              "and salary < " + salary;
+      ResultSet rs = stmt.executeQuery(sqlGet);
+      while (rs.next()){
+        playerArray[index] = new ChampionshipStats(
+                rs.getInt("player_id"),
+                rs.getString("player_name"),
+                rs.getInt("age"),
+                rs.getInt("experience"),
+                rs.getInt("position_id"));
+        playerArray[index].setSeasonStats(
+                rs.getInt("playoff_stats.games_played"),
+                rs.getInt("playoff_stats.minutes"),
+                rs.getFloat("playoff_stats.points"),
+                rs.getFloat("playoff_stats.FGM"),
+                rs.getFloat("playoff_stats.FGA"),
+                rs.getFloat("playoff_stats.FG_PER"),
+                rs.getFloat("playoff_stats.THREE_PM"),
+                rs.getFloat("playoff_stats.THREE_PA"),
+                rs.getFloat("playoff_stats.THREE_P_PER"),
+                rs.getFloat("playoff_stats.FTM"),
+                rs.getFloat("playoff_stats.FTA"),
+                rs.getFloat("playoff_stats.FT_PER"),
+                rs.getFloat("playoff_stats.OREB"),
+                rs.getFloat("playoff_stats.DREB"),
+                rs.getFloat("playoff_stats.REB"),
+                rs.getFloat("playoff_stats.AST"),
+                rs.getFloat("playoff_stats.TOV"),
+                rs.getFloat("playoff_stats.STL"),
+                rs.getFloat("playoff_stats.BLK"),
+                rs.getFloat("playoff_stats.PF"),
+                rs.getFloat("playoff_stats.FP"),
+                rs.getInt("playoff_stats.DD2"),
+                rs.getInt("playoff_stats.TD3"),
+                rs.getInt("SALARY"));
+        playerArray[index].setAdvancedStats(
+                rs.getFloat("OFFRTG"),
+                rs.getFloat("DEFRTG"),
+                rs.getFloat("NETRTG"),
+                rs.getFloat("AST_PER"),
+                rs.getFloat("OREB_PER"),
+                rs.getFloat("DREB_PER"),
+                rs.getFloat("REB_PER"),
+                rs.getFloat("EFG_PER"),
+                rs.getFloat("TS_PER"),
+                rs.getFloat("USG_PER"),
+                rs.getFloat("PACE"),
+                rs.getFloat("PIE"));
+        index++;
+      }
+      rs.close();
+      stmt.close();
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    }
+    return playerArray;
+  }
+
+  public ChampionshipStats[] championshipPlayers(String position, int salary) {
+    ChampionshipStats[] players;
     if (position.equals("PG")) {
       players = championshipPGs(salary);
     } else if (position.equals("SG")) {
@@ -381,61 +447,80 @@ public class DBUtils {
     return players;
   }
 
-  public SeasonStats[] championshipPGs(int salary) {
-    SeasonStats[] pgs = getPosition("PG", numPositions("PG", salary), salary);
-    for(int i = 0; i < pgs.length; i++) {
+  public ChampionshipStats[] championshipPGs(int salary) {
+    ChampionshipStats[] pgs = getChampionshipPosition("PG", numChampionshipPositions("PG", salary), salary);
+    for (int i = 0; i < pgs.length; i++) {
       float value = 0;
-      value += -(pgs[i].getSalary() / 1000000.0);
-      value += -(pgs[i].getAge());
-      value += -(pgs[i].getExperience() * 10);
+      value += pgs[i].getAST();
+      value += pgs[i].getAST_PER();
+      value -= pgs[i].getTOV();
+      value += pgs[i].getSTL();
+      value += pgs[i].getPIE();
+      value += pgs[i].getGames();
+      value += pgs[i].getMinutes();
       pgs[i].setValue(value);
     }
     return pgs;
   }
 
-  public SeasonStats[] championshipSGs(int salary) {
-    SeasonStats[] sgs = getPosition("SG", numPositions("SG", salary), salary);
-    for(int i = 0; i < sgs.length; i++) {
+  public ChampionshipStats[] championshipSGs(int salary) {
+    ChampionshipStats[] sgs = getChampionshipPosition("SG", numChampionshipPositions("SG", salary), salary);
+    for (int i = 0; i < sgs.length; i++) {
       float value = 0;
-      value += -(sgs[i].getSalary() / 1000000.0);
-      value += -(sgs[i].getAge());
-      value += -(sgs[i].getExperience() * 10);
+      value += sgs[i].getPoints();
+      value += sgs[i].getFG_PER();
+      value += sgs[i].getTHREE_P_PER();
+      value += sgs[i].getTS_PER();
+      value += sgs[i].getPIE();
+      value += sgs[i].getGames();
+      value += sgs[i].getMinutes();
       sgs[i].setValue(value);
     }
     return sgs;
   }
 
-  public SeasonStats[] championshipSFs(int salary) {
-    SeasonStats[] sfs = getPosition("SF", numPositions("SF", salary), salary);
-    for(int i = 0; i < sfs.length; i++) {
+  public ChampionshipStats[] championshipSFs(int salary) {
+    ChampionshipStats[] sfs = getChampionshipPosition("SF", numChampionshipPositions("SF", salary), salary);
+    for (int i = 0; i < sfs.length; i++) {
       float value = 0;
-      value += -(sfs[i].getSalary() / 1000000.0);
-      value += -(sfs[i].getAge());
-      value += -(sfs[i].getExperience() * 10);
+      value += sfs[i].getTD3();
+      value += sfs[i].getPoints();
+      value += sfs[i].getREB();
+      value += sfs[i].getAST();
+      value += sfs[i].getNETRTG();
+      value += sfs[i].getPIE();
+      value += sfs[i].getGames();
+      value += sfs[i].getMinutes();
       sfs[i].setValue(value);
     }
     return sfs;
   }
 
-  public SeasonStats[] championshipPFs(int salary) {
-    SeasonStats[] pfs = getPosition("PF", numPositions("PF", salary), salary);
-    for(int i = 0; i < pfs.length; i++) {
+  public ChampionshipStats[] championshipPFs(int salary) {
+    ChampionshipStats[] pfs = getChampionshipPosition("PF", numChampionshipPositions("PF", salary), salary);
+    for (int i = 0; i < pfs.length; i++) {
       float value = 0;
-      value += -(pfs[i].getSalary() / 1000000.0);
-      value += -(pfs[i].getAge());
-      value += -(pfs[i].getExperience() * 10);
+      value += pfs[i].getREB();
+      value += pfs[i].getTHREE_P_PER();
+      value += pfs[i].getPIE();
+      value += pfs[i].getGames();
+      value += pfs[i].getMinutes();
       pfs[i].setValue(value);
     }
     return pfs;
   }
 
-  public SeasonStats[] championshipCs(int salary) {
-    SeasonStats[] cs = getPosition("C", numPositions("C", salary), salary);
-    for(int i = 0; i < cs.length; i++) {
+  public ChampionshipStats[] championshipCs(int salary) {
+    ChampionshipStats[] cs = getChampionshipPosition("C", numChampionshipPositions("C", salary), salary);
+    for (int i = 0; i < cs.length; i++) {
       float value = 0;
-      value += -(cs[i].getSalary() / 1000000.0);
-      value += -(cs[i].getAge());
-      value += -(cs[i].getExperience() * 10);
+      value += cs[i].getDD2();
+      value += cs[i].getREB();
+      value += cs[i].getREB_PER();
+      value += cs[i].getBLK();
+      value += cs[i].getDEFRTG();
+      value += cs[i].getGames();
+      value += cs[i].getMinutes();
       cs[i].setValue(value);
     }
     return cs;
