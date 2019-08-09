@@ -1,9 +1,5 @@
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
-import javax.sound.midi.SysexMessage;
 
 public class DBUtils {
 
@@ -11,7 +7,7 @@ public class DBUtils {
   private String url;
   private String user;
   private String password;
-  private Connection con = null;
+  private Connection con;
 
   public DBUtils(String url, String user, String password) {
     this.url = url;
@@ -41,6 +37,58 @@ public class DBUtils {
       System.err.println(e.getMessage());
       e.printStackTrace();
     }
+  }
+
+  public PlayoffStats[] addPlayer(SeasonStats[] currentRoster, int num, int playerID) {
+    try {
+      Connection con = getConnection();
+      Statement stmt = con.createStatement();
+      String sqlGet = "SELECT * FROM Season_Stats " +
+                      "JOIN player using (player_id) " +
+                      "WHERE player_id = " + playerID;
+      ResultSet rs = stmt.executeQuery(sqlGet);
+      if (rs.next()) {
+        currentRoster[num] = new SeasonStats(
+                rs.getInt("player_id"),
+                rs.getString("player_name"),
+                rs.getInt("age"),
+                rs.getInt("experience"),
+                rs.getInt("position_id"));
+        currentRoster[num].setSeasonStats(
+                rs.getInt("games_played"),
+                rs.getInt("minutes"),
+                rs.getFloat("points"),
+                rs.getFloat("FGM"),
+                rs.getFloat("FGA"),
+                rs.getFloat("FG_PER"),
+                rs.getFloat("THREE_PM"),
+                rs.getFloat("THREE_PA"),
+                rs.getFloat("THREE_P_PER"),
+                rs.getFloat("FTM"),
+                rs.getFloat("FTA"),
+                rs.getFloat("FT_PER"),
+                rs.getFloat("OREB"),
+                rs.getFloat("DREB"),
+                rs.getFloat("REB"),
+                rs.getFloat("AST"),
+                rs.getFloat("TOV"),
+                rs.getFloat("STL"),
+                rs.getFloat("BLK"),
+                rs.getFloat("PF"),
+                rs.getFloat("FP"),
+                rs.getInt("DD2"),
+                rs.getInt("TD3"),
+                rs.getInt("SALARY"));
+      } else {
+        //throw new IllegalArgumentException("Player does not exist")
+      }
+      rs.close();
+      stmt.close();
+    } catch (SQLException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    }
+    return currentRoster;
   }
 
   /**
@@ -93,14 +141,16 @@ public class DBUtils {
     return key;
   }
 
-  public int numPositions(String position) {
+  public int numPositions(String position, int salary) {
     int key = -1;
     try {
       Connection con = getConnection();
       Statement stmt = con.createStatement();
       String sqlGet = "select count(*) as total from player " +
+                      "join season_stats using (player_id)" +
                       "join position using (position_id) " +
-                      "where abbrevation = \"" + position + "\"";
+                      "where abbrevation = \"" + position + "\"" +
+                      "and salary < "  + salary;
       ResultSet rs = stmt.executeQuery(sqlGet);
       rs.next();
       key = rs.getInt("total");
@@ -113,21 +163,50 @@ public class DBUtils {
     return key;
   }
 
-  public int[] getPosition(String position, int size, int salary) {
-    int[] playerArray = new int[size];
+  public SeasonStats[] getPosition(String position, int size, int salary) {
+    SeasonStats[] playerArray = new SeasonStats[size];
     int index = 0;
-    int key = -1;
     try {
       Connection con = getConnection();
       Statement stmt = con.createStatement();
-      String sqlGet = "select player_id from player " +
+      String sqlGet = "select * from player " +
                         "join position using (position_id) " +
                         "join season_stats using (player_id) " +
                         "where abbrevation = \"" + position + "\" " +
                         "and salary < " + salary;
       ResultSet rs = stmt.executeQuery(sqlGet);
       while (rs.next()){
-        playerArray[index] = rs.getInt("player_id");
+        playerArray[index] = new SeasonStats(
+                        rs.getInt("player_id"),
+                        rs.getString("player_name"),
+                        rs.getInt("age"),
+                        rs.getInt("experience"),
+                        rs.getInt("position_id"));
+        playerArray[index].setSeasonStats(
+                rs.getInt("games_played"),
+                rs.getInt("minutes"),
+                rs.getFloat("points"),
+                rs.getFloat("FGM"),
+                rs.getFloat("FGA"),
+                rs.getFloat("FG_PER"),
+                rs.getFloat("THREE_PM"),
+                rs.getFloat("THREE_PA"),
+                rs.getFloat("THREE_P_PER"),
+                rs.getFloat("FTM"),
+                rs.getFloat("FTA"),
+                rs.getFloat("FT_PER"),
+                rs.getFloat("OREB"),
+                rs.getFloat("DREB"),
+                rs.getFloat("REB"),
+                rs.getFloat("AST"),
+                rs.getFloat("TOV"),
+                rs.getFloat("STL"),
+                rs.getFloat("BLK"),
+                rs.getFloat("PF"),
+                rs.getFloat("FP"),
+                rs.getInt("DD2"),
+                rs.getInt("TD3"),
+                rs.getInt("SALARY"));
         index++;
       }
       rs.close();
@@ -139,80 +218,205 @@ public class DBUtils {
     return playerArray;
   }
 
-  public int[] championshipPlayers(String position, int[] currentroster, int salary) {
-    int[] playerArray = getPosition(position, numPositions(position), salary);
-    if (position == "PG") {
-      int[] rankedArray = championshipPGs(playerArray, currentroster, salary);
+  public SeasonStats[] futurePlayers(String position, int salary) {
+    SeasonStats[] players;
+    if (position.equals("PG")) {
+      players = futurePGs(salary);
+    } else if (position.equals("SG")) {
+      players = futureSGs(salary);
+    } else if (position.equals("SF")) {
+      players =  futureSFs(salary);
+    } else if (position.equals("PF")) {
+      players =  futurePFs(salary);
     }
-    return null;
+    else {
+      players = futureCs(salary);
+    }
+    Arrays.sort(players, new PlayerComparator());
+    return players;
   }
 
-  private int[] championshipPGs(int[] PGarray, int[] currentroster, int salary) {
-    //look at storing current roster in class, instead of just player id
-    List avaiablePGs = new ArrayList<Integer>();
-    for(int value: PGarray) {
-      avaiablePGs.add(value);
+  public SeasonStats[] futurePGs(int salary) {
+    SeasonStats[] pgs = getPosition("PG", numPositions("PG", salary), salary);
+    for(int i = 0; i < pgs.length; i++) {
+      float value = 0;
+      value += -(pgs[i].getSalary() / 2000000.0);
+      value += -pgs[i].getAge();
+      value += pgs[i].getAST();
+      value += -pgs[i].getTOV();
+      value += pgs[i].getSTL();
+      value += pgs[i].getGames();
+      value += pgs[i].getMinutes();
+      pgs[i].setValue(value);
     }
+    return pgs;
+  }
 
-    System.out.println("currentroster size: " + currentroster.length);
-    List rosterList = new ArrayList<Integer>();
-    for(int value: currentroster) {
-      rosterList.add(value);
+  public SeasonStats[] futureSGs(int salary) {
+    SeasonStats[] sgs = getPosition("SG", numPositions("SG", salary), salary);
+    for(int i = 0; i < sgs.length; i++) {
+      float value = 0;
+      value += -(sgs[i].getSalary() / 2000000.0);
+      value += -sgs[i].getAge();
+      value += sgs[i].getFG_PER();
+      value += sgs[i].getTHREE_P_PER();
+      value += -sgs[i].getPoints();
+      value += sgs[i].getGames();
+      value += sgs[i].getMinutes();
+      sgs[i].setValue(value);
     }
-    System.out.println("rosterList size: " + rosterList.size());
-    for (int i = 0; i < rosterList.size(); i++) {
-      System.out.println(rosterList.get(i));
+    return sgs;
+  }
+
+  public SeasonStats[] futureSFs(int salary) {
+    SeasonStats[] sfs = getPosition("SG", numPositions("SG", salary), salary);
+    for(int i = 0; i < sfs.length; i++) {
+      float value = 0;
+      value += -(sfs[i].getSalary() / 2000000.0);
+      value += -sfs[i].getAge();
+      value += sfs[i].getTD3();
+      value += sfs[i].getPoints();
+      value += sfs[i].getREB();
+      value += sfs[i].getAST();
+      value += sfs[i].getGames();
+      value += sfs[i].getMinutes();
+      sfs[i].setValue(value);
     }
+    return sfs;
+  }
 
-
-    avaiablePGs.removeAll(rosterList);
-    for(int i = 0; i < rosterList.size(); i++) {
-      avaiablePGs.remove(avaiablePGs.size() - 1);
+  public SeasonStats[] futurePFs(int salary) {
+    SeasonStats[] pfs = getPosition("SG", numPositions("SG", salary), salary);
+    for(int i = 0; i < pfs.length; i++) {
+      float value = 0;
+      value += -(pfs[i].getSalary() / 2000000.0);
+      value += -pfs[i].getAge();
+      value += pfs[i].getREB();
+      value += pfs[i].getTHREE_P_PER();
+      value += pfs[i].getGames();
+      value += pfs[i].getMinutes();
+      pfs[i].setValue(value);
     }
+    return pfs;
+  }
 
-    System.out.println("avaiablePGS size: " + avaiablePGs.size());
-    for (int i = 0; i < avaiablePGs.size(); i++) {
-      System.out.println(avaiablePGs.get(i));
+  public SeasonStats[] futureCs(int salary) {
+    SeasonStats[] cs = getPosition("SG", numPositions("SG", salary), salary);
+    for(int i = 0; i < cs.length; i++) {
+      float value = 0;
+      value += -(cs[i].getSalary() / 2000000.0);
+      value += -cs[i].getAge();
+      value += cs[i].getDD2();
+      value += cs[i].getREB();
+      value += cs[i].getBLK();
+      value += cs[i].getGames();
+      value += cs[i].getMinutes();
+      cs[i].setValue(value);
     }
-    /*
-    int key = -1;
-    try {
-      Connection con = getConnection();
-      Statement stmt = con.createStatement();
-      // Build the SQL
-      StringBuilder sqlGet = new StringBuilder("SELECT player_id FROM season_stats " +
-                                            "WHERE position_id = 1 and salary < " + salary +
-                                            " AND player_id NOT IN (");
-      System.out.println("test1");
-      for (int i = 0; i < currentroster.length; i++) {
-        sqlGet.append(currentroster[i]);
-        sqlGet.append(",");
-      }
-      // Delete the last comma
-      sqlGet.delete(sqlGet.length()-1, sqlGet.length());
-      sqlGet.append(")");
-      System.out.println(sqlGet.toString());
+    return cs;
+  }
 
-      ResultSet rs = stmt.executeQuery(sqlGet.toString());
-      int[] championPGsArray = new int[PGarray.length];
-      int index = 0;
-      while (rs.next()){
-        championPGsArray[index] = rs.getInt("player_id");
-        index++;
-      }
-      System.out.println("size: " + index);
-      rs.close();
-      stmt.close();
-    } catch (SQLException e) {
-      System.err.println(e.getMessage());
-      e.printStackTrace();
+  public SeasonStats[] tankPlayers(String position, int salary) {
+    SeasonStats[] players;
+    if (position.equals("PG")) {
+     players = getPosition("PG", numPositions("PG", salary), salary);
+    } else if (position.equals("SG")) {
+      players =  getPosition("SG", numPositions("SG", salary), salary);
+    } else if (position.equals("SF")) {
+      players =  getPosition("SF", numPositions("SF", salary), salary);
+    } else if (position.equals("PF")) {
+      players =  getPosition("PF", numPositions("PF", salary), salary);
     }
-
-    for (int i = 0; i < currentroster.length; i++) {
-
+    else {
+      players = getPosition("C", numPositions("C", salary), salary);
     }
-    */
-    return null;
+    for (int i = 0; i < players.length; i++) {
+      float value = 0;
+      value += -(players[i].getSalary() / 1000000.0);
+      value += -(players[i].getAge());
+      value += -(players[i].getExperience() * 10);
+      players[i].setValue(value);
+    }
+    Arrays.sort(players, new PlayerComparator());
+    return players;
+  }
+
+  public SeasonStats[] championshipPlayers(String position, int salary) {
+    SeasonStats[] players;
+    if (position.equals("PG")) {
+      players = championshipPGs(salary);
+    } else if (position.equals("SG")) {
+      players = championshipSGs(salary);
+    } else if (position.equals("SF")) {
+      players =  championshipSFs(salary);
+    } else if (position.equals("PF")) {
+      players =  championshipPFs(salary);
+    }
+    else {
+      players = championshipCs(salary);
+    }
+    Arrays.sort(players, new PlayerComparator());
+    return players;
+  }
+
+  public SeasonStats[] championshipPGs(int salary) {
+    SeasonStats[] pgs = getPosition("PG", numPositions("PG", salary), salary);
+    for(int i = 0; i < pgs.length; i++) {
+      float value = 0;
+      value += -(pgs[i].getSalary() / 1000000.0);
+      value += -(pgs[i].getAge());
+      value += -(pgs[i].getExperience() * 10);
+      pgs[i].setValue(value);
+    }
+    return pgs;
+  }
+
+  public SeasonStats[] championshipSGs(int salary) {
+    SeasonStats[] sgs = getPosition("PG", numPositions("PG", salary), salary);
+    for(int i = 0; i < sgs.length; i++) {
+      float value = 0;
+      value += -(sgs[i].getSalary() / 1000000.0);
+      value += -(sgs[i].getAge());
+      value += -(sgs[i].getExperience() * 10);
+      sgs[i].setValue(value);
+    }
+    return sgs;
+  }
+
+  public SeasonStats[] championshipSFs(int salary) {
+    SeasonStats[] sfs = getPosition("PG", numPositions("PG", salary), salary);
+    for(int i = 0; i < sfs.length; i++) {
+      float value = 0;
+      value += -(sfs[i].getSalary() / 1000000.0);
+      value += -(sfs[i].getAge());
+      value += -(sfs[i].getExperience() * 10);
+      sfs[i].setValue(value);
+    }
+    return sfs;
+  }
+
+  public SeasonStats[] championshipPFs(int salary) {
+    SeasonStats[] pfs = getPosition("PG", numPositions("PG", salary), salary);
+    for(int i = 0; i < pfs.length; i++) {
+      float value = 0;
+      value += -(pfs[i].getSalary() / 1000000.0);
+      value += -(pfs[i].getAge());
+      value += -(pfs[i].getExperience() * 10);
+      pfs[i].setValue(value);
+    }
+    return pfs;
+  }
+
+  public SeasonStats[] championshipCs(int salary) {
+    SeasonStats[] cs = getPosition("PG", numPositions("PG", salary), salary);
+    for(int i = 0; i < cs.length; i++) {
+      float value = 0;
+      value += -(cs[i].getSalary() / 1000000.0);
+      value += -(cs[i].getAge());
+      value += -(cs[i].getExperience() * 10);
+      cs[i].setValue(value);
+    }
+    return cs;
   }
 
 }

@@ -75,6 +75,7 @@ public class NBATeamBuilder {
     Coach: recommend at very end
      */
 
+    /*
     int[] currentroster = {2, 3, 8};
     Scanner scan = new Scanner(System.in);
     System.out.println("What is the goal for your team?");
@@ -86,6 +87,7 @@ public class NBATeamBuilder {
     System.out.println("Number of players: " + size);
     int salary = 50000000;
     int[] championshipPGS = api.getChampionshipPGS(currentroster, salary);
+    */
 
     /*
     int[] players = api.getPositionPlayers(position, size, salary);
@@ -95,6 +97,70 @@ public class NBATeamBuilder {
     api.closeConnection();
     */
 
+    api.authenticate("docpat_user", "docpat_p@ssword");
+    SeasonStats[] currentRoster = new SeasonStats[10];
+    int numRoster = 0;
+    int salaryCap = 102000000;
+
+    Scanner scan = new Scanner(System.in);
+    System.out.println("What is the goal for your team?");
+    String goal = scan.next();
+    while(true){
+      System.out.println("Add player on current roster:");
+      int player = scan.nextInt();
+      api.addPlayer(currentRoster, numRoster, player);
+      numRoster += 1;
+      System.out.println("Do you want to add another player? y/n");
+      String input = scan.next();
+      if(input.equals("n")) {
+        break;
+      }
+    }
+    System.out.println("Enter anything to see roster: ");
+    String blah = scan.next();
+    System.out.println("Num players on roster: " + (numRoster));
+    for (int i = 0; i < numRoster; i++) {
+      System.out.println("Player " + (i + 1) + ": ");
+      System.out.println(currentRoster[i].getName());
+      System.out.println(currentRoster[i].getGames());
+      System.out.println(currentRoster[i].getMinutes());
+      System.out.println(currentRoster[i].getPoints());
+      System.out.println(currentRoster[i].getFGM());
+      System.out.println(currentRoster[i].getFGA());
+      System.out.println(currentRoster[i].getFG_PER());
+      System.out.println(currentRoster[i].getTHREE_PM());
+      System.out.println(currentRoster[i].getTHREE_PA());
+      System.out.println(currentRoster[i].getTHREE_P_PER());
+      System.out.println(currentRoster[i].getFTM());
+      System.out.println(currentRoster[i].getFTA());
+      System.out.println(currentRoster[i].getFT_PER());
+      System.out.println(currentRoster[i].getOREB());
+      System.out.println(currentRoster[i].getDREB());
+      System.out.println(currentRoster[i].getREB());
+      System.out.println(currentRoster[i].getAST());
+      System.out.println(currentRoster[i].getTOV());
+      System.out.println(currentRoster[i].getSTL());
+      System.out.println(currentRoster[i].getBLK());
+      System.out.println(currentRoster[i].getPF());
+      System.out.println(currentRoster[i].getFP());
+      System.out.println(currentRoster[i].getDD2());
+      System.out.println(currentRoster[i].getTD3());
+      System.out.println(currentRoster[i].getSalary());
+      System.out.println();
+    }
+
+    System.out.println("What position are you looking for?");
+    String position = scan.next();
+    System.out.println("What is the maximum salary you are willing to pay?");
+    int salary = scan.nextInt();
+    SeasonStats[] tankSFs = api.getFuturePlayers(position, salary);
+    System.out.println("tankSFs size: " + tankSFs.length);
+    for(int i = 0; i < tankSFs.length; i++) {
+      System.out.println("i: " + i);
+      System.out.println(tankSFs[i].getName());
+      System.out.println(tankSFs[i].getValue());
+    }
+    api.closeConnection();
   }
 
 }

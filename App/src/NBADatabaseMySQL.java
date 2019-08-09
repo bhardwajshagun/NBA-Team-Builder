@@ -1,7 +1,3 @@
-import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 public class NBADatabaseMySQL {
 
   // For demonstration purposes. Better would be a constructor that takes a file path
@@ -31,16 +27,35 @@ public class NBADatabaseMySQL {
     return dbu.getCount("player");
   }
 
+  /*
   public int[] getPositionPlayers(String position, int size, int salary) {
     return dbu.getPosition(position, size, salary);
   }
+  */
 
+
+  /*
   public int[] getChampionshipPGS(int[] currentroster, int salary) {
     return dbu.championshipPlayers("PG", currentroster, salary);
   }
+  */
 
+  /*
   public int getNumPositions(String position){
     return dbu.numPositions(position);
+  }
+  */
+
+  public PlayoffStats[] addPlayer(SeasonStats[] currentRoster, int num, int playerID) {
+    return dbu.addPlayer(currentRoster, num, playerID);
+  }
+
+  public SeasonStats[] getTankPlayers(String position, int salary) {
+    return dbu.tankPlayers(position, salary);
+  }
+
+  public SeasonStats[] getFuturePlayers(String position, int salary) {
+    return  dbu.futurePlayers(position, salary);
   }
 
 }
