@@ -12,90 +12,105 @@ public class NBATeamBuilder {
   public String[] getTankPGs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getTankPlayers("PG", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getTankSGs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getTankPlayers("SG", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getTankSFs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getTankPlayers("SF", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getTankPFs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getTankPlayers("SF", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getTankCs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getTankPlayers("SF", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getFuturePGs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getFuturePlayers("PG", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getFutureSGs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getFuturePlayers("SG", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getFutureSFs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getFuturePlayers("SF", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getFuturePFs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getFuturePlayers("PF", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getFutureCs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     SeasonStats[] players = api.getFuturePlayers("C", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getChampionshipPGs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     ChampionshipStats[] players = api.getChampionshipPlayers("PG", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getChampionshipSGs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     ChampionshipStats[] players = api.getChampionshipPlayers("SG", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getChampionshipSFs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     ChampionshipStats[] players = api.getChampionshipPlayers("SF", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getChampionshipPFs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     ChampionshipStats[] players = api.getChampionshipPlayers("PF", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
   public String[] getChampionshipCs(int salary) {
     api.authenticate("docpat_user", "docpat_p@ssword");
     ChampionshipStats[] players = api.getChampionshipPlayers("C", salary);
+    api.closeConnection();
     return getNames(players);
   }
 
